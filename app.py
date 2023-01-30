@@ -7,22 +7,16 @@ import tmdb_client
 @app.route('/')
 def homepage():
     selected_list = request.args.get('list_type', 'popular')
-    movies = tmdb_client.get_popular_movies()["results"][:8]
-    if selected_list == 'now_playing':
-        url = "https://api.themoviedb.org/3/movie/now_playing?api_key=c98f13140ddb6dd3cda199eb01c083cf&language=en-US&page=1"
-        response = requests.get(url)
-        data = response.json()
-        print(data)
-        movies = data["results"][:8]
-    elif selected_list == 'popular':
-        url = "https://api.themoviedb.org/3/movie/popular?api_key=c98f13140ddb6dd3cda199eb01c083cf&language=en-US&page=1"
-        response = requests.get(url)
-        print(response)
-        data = response.json()
-        #print(data)
-        movies = data["results"][:8]
+    available_lists = ['popular', 'now_playing', 'top_rated', 'upcoming']
+    if selected_list not in available_lists:
+        selected_list = 'popular'
+    url = f"https://api.themoviedb.org/3/movie/{selected_list}?api_key=c98f13140ddb6dd3cda199eb01c083cf&language=en-US&page=1"
+    response = requests.get(url)
+    data = response.json()
+    movies = data["results"][:8]
+    return render_template("homepage.html", movies=movies, available_lists=available_lists, selected_list=selected_list)
 
-    return render_template("homepage.html", movies=movies)
+
 
 @app.context_processor
 def utility_processor():
