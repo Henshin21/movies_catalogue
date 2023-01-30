@@ -12,11 +12,14 @@ def homepage():
         url = "https://api.themoviedb.org/3/movie/now_playing?api_key=c98f13140ddb6dd3cda199eb01c083cf&language=en-US&page=1"
         response = requests.get(url)
         data = response.json()
+        print(data)
         movies = data["results"][:8]
     elif selected_list == 'popular':
         url = "https://api.themoviedb.org/3/movie/popular?api_key=c98f13140ddb6dd3cda199eb01c083cf&language=en-US&page=1"
         response = requests.get(url)
+        print(response)
         data = response.json()
+        #print(data)
         movies = data["results"][:8]
 
     return render_template("homepage.html", movies=movies)
